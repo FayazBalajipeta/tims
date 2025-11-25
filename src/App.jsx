@@ -16,7 +16,6 @@ import UserProfile from './pages/User/UserProfile';
 import UserManagement from './pages/Admin/UserManagement';
 import Analytics from './pages/Analytics/Analytics';
 import Settings from './pages/Settings/Settings';
-import KnowledgeBase from './pages/KnowledgeBase/KnowledgeBase';
 import NotFound from './pages/NotFound';
 
 // Protected Route Component
@@ -66,9 +65,6 @@ function App() {
           
           {/* User Routes */}
           <Route path="/profile" element={<UserProfile />} />
-          
-          {/* Knowledge Base */}
-          <Route path="/knowledge-base" element={<KnowledgeBase />} />
           
           {/* Admin Routes */}
           <Route
