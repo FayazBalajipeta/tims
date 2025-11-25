@@ -180,15 +180,6 @@ const Dashboard = () => {
           </div>
         </button>
         <button
-          onClick={() => navigate('/knowledge-base')}
-          className="card hover:shadow-md transition-shadow text-left"
-        >
-          <div className="flex items-center">
-            <ChartBarIcon className="h-6 w-6 text-primary-600" />
-            <span className="ml-3 text-sm font-medium text-gray-900">Browse Knowledge Base</span>
-          </div>
-        </button>
-        <button
           onClick={() => navigate('/analytics')}
           className="card hover:shadow-md transition-shadow text-left"
         >

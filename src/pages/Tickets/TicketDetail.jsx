@@ -35,10 +35,13 @@ const TicketDetail = () => {
     {
       onSuccess: () => {
         toast.success('Ticket updated successfully');
+        setShowEditModal(false);
+        setShowStatusModal(false);
         refetch();
       },
-      onError: () => {
-        toast.error('Failed to update ticket');
+      onError: (error) => {
+        console.error('Update error:', error);
+        toast.error(error?.response?.data?.message || 'Failed to update ticket');
       },
     }
   );
@@ -241,7 +244,6 @@ const TicketDetail = () => {
           onClose={() => setShowStatusModal(false)}
           onUpdate={(updates) => {
             updateMutation.mutate({ ticketId: ticket._id, updates });
-            setShowStatusModal(false);
           }}
         />
       )}
@@ -253,7 +255,6 @@ const TicketDetail = () => {
           onClose={() => setShowEditModal(false)}
           onUpdate={(updates) => {
             updateMutation.mutate({ ticketId: ticket._id, updates });
-            setShowEditModal(false);
           }}
         />
       )}

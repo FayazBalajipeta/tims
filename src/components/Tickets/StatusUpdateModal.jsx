@@ -7,14 +7,12 @@ import { TICKET_STATUSES, TICKET_PRIORITIES } from '@/utils/constants';
 const StatusUpdateModal = ({ ticket, onClose, onUpdate }) => {
   const [status, setStatus] = useState(ticket.status);
   const [priority, setPriority] = useState(ticket.priority);
-  const [comment, setComment] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onUpdate({
       status,
       priority,
-      comment,
     });
   };
 
@@ -95,20 +93,6 @@ const StatusUpdateModal = ({ ticket, onClose, onUpdate }) => {
                         </option>
                       ))}
                     </select>
-                  </div>
-
-                  <div>
-                    <label htmlFor="comment" className="block text-sm font-medium text-gray-700 mb-1">
-                      Comment (Optional)
-                    </label>
-                    <textarea
-                      id="comment"
-                      rows={3}
-                      value={comment}
-                      onChange={(e) => setComment(e.target.value)}
-                      placeholder="Add a note about this update..."
-                      className="input-field"
-                    />
                   </div>
 
                   <div className="flex items-center justify-end gap-3 pt-4">
