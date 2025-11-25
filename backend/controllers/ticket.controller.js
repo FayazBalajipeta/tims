@@ -98,6 +98,10 @@ export const updateTicket = async (req, res, next) => {
       });
     }
 
+    // Extract comment if provided (should not be part of direct ticket update)
+    const updateComment = req.body.comment;
+    delete req.body.comment;
+
     // Add to history
     if (req.body.status && req.body.status !== ticket.status) {
       ticket.history.push({
@@ -119,11 +123,38 @@ export const updateTicket = async (req, res, next) => {
       });
     }
 
+    if (req.body.title && req.body.title !== ticket.title) {
+      ticket.history.push({
+        description: 'Ticket title updated',
+        user: req.user.id,
+      });
+    }
+
+    if (req.body.description && req.body.description !== ticket.description) {
+      ticket.history.push({
+        description: 'Ticket description updated',
+        user: req.user.id,
+      });
+    }
+
+    // Add comment if provided with the update
+    if (updateComment && updateComment.trim()) {
+      ticket.comments.push({
+        content: updateComment,
+        author: req.user.id,
+      });
+
+      ticket.history.push({
+        description: 'Comment added with status update',
+        user: req.user.id,
+      });
+    }
+
     // Update ticket
     Object.assign(ticket, req.body);
     await ticket.save();
 
-    await ticket.populate('createdBy assignedTo', 'name email');
+    await ticket.populate('createdBy assignedTo comments.author history.user', 'name email');
 
     res.status(200).json({
       status: 'success',
