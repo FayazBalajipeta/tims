@@ -19,7 +19,6 @@ const resources = {
       // Navigation
       'nav.dashboard': 'Dashboard',
       'nav.tickets': 'Tickets',
-      'nav.knowledgeBase': 'Knowledge Base',
       'nav.analytics': 'Analytics',
       'nav.userManagement': 'User Management',
       'nav.settings': 'Settings',

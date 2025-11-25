@@ -7,7 +7,6 @@ import {
   UserGroupIcon,
   ChartBarIcon,
   Cog6ToothIcon,
-  BookOpenIcon,
   XMarkIcon,
 } from '@heroicons/react/24/outline';
 import { useAuthStore } from '@/store/authStore';
@@ -15,7 +14,6 @@ import { useAuthStore } from '@/store/authStore';
 const navigation = [
   { name: 'Dashboard', href: '/dashboard', icon: HomeIcon, roles: ['all'] },
   { name: 'Tickets', href: '/tickets', icon: TicketIcon, roles: ['all'] },
-  { name: 'Knowledge Base', href: '/knowledge-base', icon: BookOpenIcon, roles: ['all'] },
   { name: 'Analytics', href: '/analytics', icon: ChartBarIcon, roles: ['admin', 'manager'] },
   { name: 'User Management', href: '/admin/users', icon: UserGroupIcon, roles: ['admin'] },
   { name: 'Settings', href: '/settings', icon: Cog6ToothIcon, roles: ['all'] },
