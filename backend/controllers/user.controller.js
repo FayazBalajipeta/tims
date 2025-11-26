@@ -1,4 +1,5 @@
 import User from '../models/User.model.js';
+import bcryptjs from 'bcryptjs';
 
 // @desc    Get all users
 // @route   GET /api/users
@@ -143,6 +144,70 @@ export const deleteUser = async (req, res, next) => {
     res.status(200).json({
       status: 'success',
       message: 'User deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Change password
+// @route   POST /api/users/change-password
+// @access  Private
+export const changePassword = async (req, res, next) => {
+  try {
+    const { currentPassword, newPassword, confirmPassword } = req.body;
+
+    // Validation
+    if (!currentPassword || !newPassword || !confirmPassword) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Please provide all required fields',
+      });
+    }
+
+    if (newPassword !== confirmPassword) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'New passwords do not match',
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'Password must be at least 6 characters long',
+      });
+    }
+
+    // Get user with password field
+    const user = await User.findById(req.user.id).select('+password');
+
+    if (!user) {
+      return res.status(404).json({
+        status: 'error',
+        message: 'User not found',
+      });
+    }
+
+    // Verify current password
+    const isPasswordMatch = await user.matchPassword(currentPassword);
+
+    if (!isPasswordMatch) {
+      return res.status(401).json({
+        status: 'error',
+        message: 'Current password is incorrect',
+      });
+    }
+
+    // Hash new password
+    const salt = await bcryptjs.genSalt(10);
+    user.password = await bcryptjs.hash(newPassword, salt);
+
+    await user.save();
+
+    res.status(200).json({
+      status: 'success',
+      message: 'Password changed successfully',
     });
   } catch (error) {
     next(error);

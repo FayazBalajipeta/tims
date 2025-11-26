@@ -7,6 +7,7 @@ import {
   createUser,
   updateUser,
   deleteUser,
+  changePassword,
 } from '../controllers/user.controller.js';
 import { protect, authorize } from '../middleware/auth.middleware.js';
 
@@ -17,6 +18,7 @@ router.use(protect);
 
 router.get('/profile', getProfile);
 router.put('/profile', updateProfile);
+router.post('/change-password', changePassword);
 
 // Admin only routes
 router.get('/', authorize('admin', 'manager'), getUsers);

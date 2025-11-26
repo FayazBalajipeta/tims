@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
+import ChangePasswordModal from '@/components/Settings/ChangePasswordModal';
 
 const Settings = () => {
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   return (
     <div className="fade-in max-w-4xl mx-auto">
       <div className="mb-6">
@@ -106,7 +108,10 @@ const Settings = () => {
           <h3 className="text-lg font-medium text-gray-900 mb-4">Security Settings</h3>
           <div className="space-y-4">
             <div>
-              <button className="btn-secondary">
+              <button
+                onClick={() => setShowChangePasswordModal(true)}
+                className="btn-secondary"
+              >
                 Change Password
               </button>
             </div>
@@ -130,6 +135,12 @@ const Settings = () => {
           </button>
         </div>
       </div>
+
+      {/* Change Password Modal */}
+      <ChangePasswordModal
+        isOpen={showChangePasswordModal}
+        onClose={() => setShowChangePasswordModal(false)}
+      />
     </div>
   );
 };
