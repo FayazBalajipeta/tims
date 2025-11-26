@@ -2,17 +2,39 @@ import React, { useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
-import { TICKET_STATUSES, TICKET_PRIORITIES } from '@/utils/constants';
 
-const StatusUpdateModal = ({ ticket, onClose, onUpdate }) => {
-  const [status, setStatus] = useState(ticket.status);
-  const [priority, setPriority] = useState(ticket.priority);
+const TicketEditModal = ({ ticket, onClose, onUpdate }) => {
+  const [title, setTitle] = useState(ticket.title);
+  const [description, setDescription] = useState(ticket.description);
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const newErrors = {};
+    
+    if (!title.trim()) {
+      newErrors.title = 'Title is required';
+    } else if (title.length > 200) {
+      newErrors.title = 'Title cannot exceed 200 characters';
+    }
+    
+    if (!description.trim()) {
+      newErrors.description = 'Description is required';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    if (!validate()) {
+      return;
+    }
+    
     onUpdate({
-      status,
-      priority,
+      title: title.trim(),
+      description: description.trim(),
     });
   };
 
@@ -42,13 +64,13 @@ const StatusUpdateModal = ({ ticket, onClose, onUpdate }) => {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+              <Dialog.Panel className="w-full max-w-2xl transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
                 <Dialog.Title
                   as="div"
                   className="flex items-center justify-between mb-4"
                 >
                   <h3 className="text-lg font-medium text-gray-900">
-                    Update Ticket
+                    Edit Ticket
                   </h3>
                   <button
                     onClick={onClose}
@@ -60,39 +82,37 @@ const StatusUpdateModal = ({ ticket, onClose, onUpdate }) => {
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label htmlFor="status" className="block text-sm font-medium text-gray-700 mb-1">
-                      Status
+                    <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
+                      Title <span className="text-red-500">*</span>
                     </label>
-                    <select
-                      id="status"
-                      value={status}
-                      onChange={(e) => setStatus(e.target.value)}
-                      className="input-field"
-                    >
-                      {TICKET_STATUSES.map((s) => (
-                        <option key={s.value} value={s.value}>
-                          {s.label}
-                        </option>
-                      ))}
-                    </select>
+                    <input
+                      type="text"
+                      id="title"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className={`input-field ${errors.title ? 'border-red-500' : ''}`}
+                      placeholder="Enter ticket title"
+                    />
+                    {errors.title && (
+                      <p className="mt-1 text-sm text-red-600">{errors.title}</p>
+                    )}
                   </div>
 
                   <div>
-                    <label htmlFor="priority" className="block text-sm font-medium text-gray-700 mb-1">
-                      Priority
+                    <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
+                      Description <span className="text-red-500">*</span>
                     </label>
-                    <select
-                      id="priority"
-                      value={priority}
-                      onChange={(e) => setPriority(e.target.value)}
-                      className="input-field"
-                    >
-                      {TICKET_PRIORITIES.map((p) => (
-                        <option key={p.value} value={p.value}>
-                          {p.label}
-                        </option>
-                      ))}
-                    </select>
+                    <textarea
+                      id="description"
+                      rows={8}
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      placeholder="Describe the issue in detail..."
+                      className={`input-field ${errors.description ? 'border-red-500' : ''}`}
+                    />
+                    {errors.description && (
+                      <p className="mt-1 text-sm text-red-600">{errors.description}</p>
+                    )}
                   </div>
 
                   <div className="flex items-center justify-end gap-3 pt-4">
@@ -104,7 +124,7 @@ const StatusUpdateModal = ({ ticket, onClose, onUpdate }) => {
                       Cancel
                     </button>
                     <button type="submit" className="btn-primary">
-                      Update Ticket
+                      Save Changes
                     </button>
                   </div>
                 </form>
@@ -117,4 +137,4 @@ const StatusUpdateModal = ({ ticket, onClose, onUpdate }) => {
   );
 };
 
-export default StatusUpdateModal;
+export default TicketEditModal;

@@ -8,12 +8,14 @@ import {
   UserIcon,
   ClockIcon,
   ChatBubbleLeftIcon,
+  PencilIcon,
 } from '@heroicons/react/24/outline';
 import { ticketService } from '@/services/ticketService';
 import { useAuthStore } from '@/store/authStore';
 import { formatDate, getStatusBadgeClass, getPriorityBadgeClass } from '@/utils/helpers';
 import LoadingSpinner from '@/components/Common/LoadingSpinner';
 import StatusUpdateModal from '@/components/Tickets/StatusUpdateModal';
+import TicketEditModal from '@/components/Tickets/TicketEditModal';
 import CommentSection from '@/components/Tickets/CommentSection';
 
 const TicketDetail = () => {
@@ -21,6 +23,7 @@ const TicketDetail = () => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
   const [showStatusModal, setShowStatusModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   const { data: ticket, isLoading, refetch } = useQuery(
     ['ticket', ticketId],
@@ -32,10 +35,13 @@ const TicketDetail = () => {
     {
       onSuccess: () => {
         toast.success('Ticket updated successfully');
+        setShowEditModal(false);
+        setShowStatusModal(false);
         refetch();
       },
-      onError: () => {
-        toast.error('Failed to update ticket');
+      onError: (error) => {
+        console.error('Update error:', error);
+        toast.error(error?.response?.data?.message || 'Failed to update ticket');
       },
     }
   );
@@ -85,12 +91,21 @@ const TicketDetail = () => {
                 <h1 className="text-2xl font-bold text-gray-900">{ticket.title}</h1>
               </div>
               {canEdit && (
-                <button
-                  onClick={() => setShowStatusModal(true)}
-                  className="btn-secondary text-sm"
-                >
-                  Update Status
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => setShowEditModal(true)}
+                    className="btn-secondary text-sm flex items-center"
+                  >
+                    <PencilIcon className="h-4 w-4 mr-1" />
+                    Edit
+                  </button>
+                  <button
+                    onClick={() => setShowStatusModal(true)}
+                    className="btn-secondary text-sm"
+                  >
+                    Update Status
+                  </button>
+                </div>
               )}
             </div>
 
@@ -229,7 +244,17 @@ const TicketDetail = () => {
           onClose={() => setShowStatusModal(false)}
           onUpdate={(updates) => {
             updateMutation.mutate({ ticketId: ticket._id, updates });
-            setShowStatusModal(false);
+          }}
+        />
+      )}
+
+      {/* Ticket Edit Modal */}
+      {showEditModal && (
+        <TicketEditModal
+          ticket={ticket}
+          onClose={() => setShowEditModal(false)}
+          onUpdate={(updates) => {
+            updateMutation.mutate({ ticketId: ticket._id, updates });
           }}
         />
       )}
