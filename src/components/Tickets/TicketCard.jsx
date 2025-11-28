@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation } from 'react-query';
 import { toast } from 'react-toastify';
-import { ClockIcon, UserIcon, TrashIcon } from '@heroicons/react/24/outline';
+import { ClockIcon, UserIcon } from '@heroicons/react/24/outline';
 import { formatDate, getStatusBadgeClass, getPriorityBadgeClass } from '@/utils/helpers';
 import { ticketService } from '@/services/ticketService';
 import { useAuthStore } from '@/store/authStore';
@@ -11,30 +11,7 @@ const TicketCard = ({ ticket, onTicketDeleted }) => {
   const navigate = useNavigate();
   const { user } = useAuthStore();
 
-  const deleteMutation = useMutation(
-    () => ticketService.deleteTicket(ticket._id),
-    {
-      onSuccess: () => {
-        toast.success('Ticket deleted successfully');
-        if (onTicketDeleted) {
-          onTicketDeleted();
-        }
-      },
-      onError: () => {
-        toast.error('Failed to delete ticket');
-      },
-    }
-  );
 
-  const canDelete = user?.role === 'admin' || user?.role === 'agent' || user?.role === 'manager';
-
-  const handleDelete = (e) => {
-    e.stopPropagation();
-    const confirmed = window.confirm('Are you really want to delete this ticket?');
-    if (confirmed) {
-      deleteMutation.mutate();
-    }
-  };
 
   return (
     <div
@@ -76,16 +53,7 @@ const TicketCard = ({ ticket, onTicketDeleted }) => {
             </div>
           </div>
         </div>
-        {canDelete && (
-          <button
-            onClick={handleDelete}
-            disabled={deleteMutation.isLoading}
-            className="ml-4 p-2 text-red-600 hover:bg-red-50 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-            title="Delete ticket"
-          >
-            <TrashIcon className="h-5 w-5" />
-          </button>
-        )}
+
       </div>
     </div>
   );

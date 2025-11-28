@@ -4,7 +4,6 @@ import {
   getTicketById,
   createTicket,
   updateTicket,
-  deleteTicket,
   assignTicket,
   updateStatus,
   updatePriority,
@@ -27,7 +26,7 @@ router.get('/assigned', authorize('agent', 'manager', 'admin'), getAssignedTicke
 
 router.get('/:id', getTicketById);
 router.put('/:id', updateTicket);
-router.delete('/:id', authorize('admin', 'agent', 'manager'), deleteTicket);
+
 
 router.post('/:id/assign', authorize('agent', 'manager', 'admin'), assignTicket);
 router.patch('/:id/status', updateStatus);

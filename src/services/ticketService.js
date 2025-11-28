@@ -41,11 +41,7 @@ export const ticketService = {
     return response.data.ticket;
   },
 
-  // Delete ticket
-  deleteTicket: async (ticketId) => {
-    const response = await apiClient.delete(`/tickets/${ticketId}`);
-    return response.data;
-  },
+
 
   // Assign ticket
   assignTicket: async (ticketId, userId) => {

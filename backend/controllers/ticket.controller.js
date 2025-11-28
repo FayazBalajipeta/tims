@@ -134,28 +134,7 @@ export const updateTicket = async (req, res, next) => {
   }
 };
 
-// @desc    Delete ticket
-// @route   DELETE /api/tickets/:id
-// @access  Private (Admin)
-export const deleteTicket = async (req, res, next) => {
-  try {
-    const ticket = await Ticket.findByIdAndDelete(req.params.id);
 
-    if (!ticket) {
-      return res.status(404).json({
-        status: 'error',
-        message: 'Ticket not found',
-      });
-    }
-
-    res.status(200).json({
-      status: 'success',
-      message: 'Ticket deleted successfully',
-    });
-  } catch (error) {
-    next(error);
-  }
-};
 
 // @desc    Assign ticket to agent
 // @route   POST /api/tickets/:id/assign

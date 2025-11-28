@@ -8,7 +8,6 @@ import {
   UserIcon,
   ClockIcon,
   ChatBubbleLeftIcon,
-  TrashIcon,
 } from '@heroicons/react/24/outline';
 import { ticketService } from '@/services/ticketService';
 import { useAuthStore } from '@/store/authStore';
@@ -41,25 +40,7 @@ const TicketDetail = () => {
     }
   );
 
-  const deleteMutation = useMutation(
-    () => ticketService.deleteTicket(ticketId),
-    {
-      onSuccess: () => {
-        toast.success('Ticket deleted successfully');
-        navigate('/tickets');
-      },
-      onError: () => {
-        toast.error('Failed to delete ticket');
-      },
-    }
-  );
 
-  const handleDeleteTicket = () => {
-    const confirmed = window.confirm('Are you really want to delete this ticket?');
-    if (confirmed) {
-      deleteMutation.mutate();
-    }
-  };
 
   if (isLoading) {
     return <LoadingSpinner />;
@@ -112,14 +93,6 @@ const TicketDetail = () => {
                     className="btn-secondary text-sm"
                   >
                     Update Status
-                  </button>
-                  <button
-                    onClick={handleDeleteTicket}
-                    disabled={deleteMutation.isLoading}
-                    className="inline-flex items-center px-3 py-2 border border-red-300 rounded-md text-sm font-medium text-red-700 bg-red-50 hover:bg-red-100 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    <TrashIcon className="h-4 w-4 mr-2" />
-                    {deleteMutation.isLoading ? 'Deleting...' : 'Delete'}
                   </button>
                 </div>
               )}
